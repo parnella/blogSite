@@ -36,15 +36,19 @@ app.get("/compose",function(req,res) {
 });
 
 app.get("/posts/:postName",function(req,res) {
-  const requestedTitle = req.params.postName;
+  const requestedTitle = _.lowerCase(req.params.postName);
   let match = 0;
 
   posts.forEach(function(post) {
-    if (_.lowerCase(post.title) === _.lowerCase(requestedTitle)) {
-      console.log("match found");    }
+    const storedTitle = _.lowerCase(post.title);
+    if (requestedTitle === storedTitle) {
+      const postContent = post.content;
+      res.render("post", {
+        postTitle: requestedTitle, 
+        postContent: postContent
+      })
+    }
   })
-
-  res.render("post", {postTitle: req.params.title})
 });
 
 app.post("/compose",function(req,res) {
